@@ -16,6 +16,18 @@ class Index(object):
         return str(days)
     api.exposed = True
 
+    def test(self):
+        zipcode = 10027
+        tup = self.get_lng_lat(zipcode)
+        return str(tup[0]) + "<br>" + str(tup[1])
+
+    test.exposed = True
+
+    def get_lng_lat(self,zipcode):
+        req = urllib2.urlopen("http://api.geonames.org/postalCodeLookupJSON?postalcode=" + str(zipcode) + "&country=US&username=demo")
+        req = json.load(req)
+        return req['postalcodes'][0]['lng'] , req['postalcodes'][0]['lat']
+
 
     def weather_now(self,query):
         req = urllib2.urlopen("http://www.google.com/ig/api?weather=" + query)
