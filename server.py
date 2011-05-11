@@ -2,6 +2,7 @@ import cherrypy
 import urllib2
 import xml.etree.ElementTree as ET
 import json
+from Cheetah.Template import Template
 
 class Index(object):
 
@@ -17,9 +18,12 @@ class Index(object):
     api.exposed = True
 
     def test(self):
+        test_t = open('test.tmpl', 'r')
+        self.test_template = test_t.read()
         zipcode = 10027
         tup = self.get_lng_lat(zipcode)
-        return str(tup[0]) + "<br>" + str(tup[1])
+        name_space = {'lng':tup[0],'lat':tup[1]}
+        return str(Template(self.test_template, name_space))
 
     test.exposed = True
 
