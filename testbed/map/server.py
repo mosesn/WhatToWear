@@ -17,6 +17,26 @@ class Index(object):
         return str(days)
     api.exposed = True
 
+#begin TEST
+#purpose: zipcode to long/lat
+#reason not included in master:
+#why does the user care to see a map?
+    def test(self):
+        test_t = open('test.tmpl', 'r')
+        self.test_template = test_t.read()
+        zipcode = 10027
+        tup = self.get_lng_lat(zipcode)
+        name_space = {'lng':tup[0],'lat':tup[1]}
+        return str(Template(self.test_template, name_space))
+
+    test.exposed = True
+
+    def get_lng_lat(self,zipcode):
+        req = urllib2.urlopen("http://api.geonames.org/postalCodeLookupJSON?postalcode=" + str(zipcode) + "&country=US&username=demo")
+        req = json.load(req)
+        return req['postalcodes'][0]['lng'] , req['postalcodes'][0]['lat']
+#END TEST
+
     def weather_now(self,query):
         req = urllib2.urlopen("http://www.google.com/ig/api?weather=" + query)
         tree = ET.ElementTree()
